@@ -17,29 +17,28 @@
     rochnel-_s
   </div>
   <script type="text/javascript">
-    const boitDiv = document.getElementById("my_bouncing_box");
-    let x = 0;
-    let y = 0;
-    let Vx = 5; // Vitesse de déplacement en pixels
-    let Vy = 5; // Vitesse de déplacement en pixels
+    boiteDive = document.getElementById("my_bouncing_box");
+    let abscisse = 0;
+    let ordonnee = 0;
+    let abscissePlus = 10;
+    let ordonneePlus = 10;
 
-    setInterval(function () {
-      x += Vx;
-      y += Vy;
+    const largeurEcranMax = window.innerWidth - boiteDive.clientWidth;
+    const hauteurEcranMax = window.innerHeight - boiteDive.clientHeight;
 
-      const maxX = window.innerWidth - boitDiv.clientWidth;
-      const maxY = window.innerHeight - boitDiv.clientHeight;
+    window.setInterval(() => {
+      abscisse += abscissePlus;
+      ordonnee += ordonneePlus;
 
-      if (x <= 0 || x >= maxX) {
-        Vx = -Vx; // Inverser la direction sur les bords gauche et droit
+      if (abscisse <= 0 || abscisse >= largeurEcranMax) {
+        abscissePlus = -abscissePlus;
+      }
+      if (ordonnee <= 0 || ordonnee >= hauteurEcranMax) {
+        ordonneePlus = -ordonneePlus;
       }
 
-      if (y <= 0 || y >= maxY) {
-        Vy = -Vy; // Inverser la direction sur les bords supérieur et inférieur
-      }
-
-      boitDiv.style.left = x + "px";
-      boitDiv.style.top = y + "px";
-    }, 100);
+      boiteDive.style.left = abscisse + "px";
+      boiteDive.style.top = ordonnee + "px";
+    }, 50);
   </script>
 </html>
