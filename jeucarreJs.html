@@ -1,0 +1,45 @@
+<html style="background-color: black">
+  <div
+    id="my_bouncing_box"
+    style="
+      background-color: blue;
+      border-radius: 3px;
+      position: absolute;
+      left: 0px;
+      top: 0px;
+      min-width: 100px;
+      min-height: 100px;
+      text-align: center;
+      font-weight: bold;
+      color: #999;
+    "
+  >
+    rochnel-_s
+  </div>
+  <script type="text/javascript">
+    const boitDiv = document.getElementById("my_bouncing_box");
+    let x = 0;
+    let y = 0;
+    let Vx = 5; // Vitesse de déplacement en pixels
+    let Vy = 5; // Vitesse de déplacement en pixels
+
+    setInterval(function () {
+      x += Vx;
+      y += Vy;
+
+      const maxX = window.innerWidth - boitDiv.clientWidth;
+      const maxY = window.innerHeight - boitDiv.clientHeight;
+
+      if (x <= 0 || x >= maxX) {
+        Vx = -Vx; // Inverser la direction sur les bords gauche et droit
+      }
+
+      if (y <= 0 || y >= maxY) {
+        Vy = -Vy; // Inverser la direction sur les bords supérieur et inférieur
+      }
+
+      boitDiv.style.left = x + "px";
+      boitDiv.style.top = y + "px";
+    }, 100);
+  </script>
+</html>

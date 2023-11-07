@@ -1,0 +1,51 @@
+body {
+  margin: 0 !important;
+}
+
+.header,
+.hero,
+.content,
+.sidebar,
+.footer {
+  text-align: center;
+}
+
+.header {
+  background-color: #00b7eb;
+  with: 100%;
+}
+.hero {
+  background-color: #ff0000;
+}
+.content {
+  background-color: #00ff00;
+  flex-grow: 1;
+}
+.sidebar {
+  background-color: #800080;
+  flex-grow: 1;
+}
+.footer {
+  background-color: #444444;
+}
+.principale {
+  display: flex;
+  flex-direction: column;
+}
+#duoBlock {
+  display: flex;
+  flex-direction: row;
+}
+
+@media (max-width: 640px) {
+  body {
+    background: black;
+  }
+  .principale {
+    flex-direction: column;
+  }
+  #duoBlock {
+    display: flex;
+    flex-direction: column;
+  }
+}
