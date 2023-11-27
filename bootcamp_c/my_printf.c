@@ -1,10 +1,8 @@
 #include <unistd.h>
-#include <stdlib.h>
 #include <stdarg.h>
 #include <string.h>
 
-// Function to convert an integer to a string
-char *itoa(int num, char *str, int base) {
+char *itoa_dec(int num, char *str) {
     int i = 0;
     int isNegative = 0;
 
@@ -15,17 +13,17 @@ char *itoa(int num, char *str, int base) {
         return str;
     }
 
-    // Handle negative numbers for bases other than 10
-    if (num < 0 && base != 10) {
+    // Handle negative numbers
+    if (num < 0) {
         isNegative = 1;
         num = -num;
     }
 
-    // Process individual digits
+    // Process individual digits in reverse order
     while (num != 0) {
-        int rem = num % base;
-        str[i++] = (rem > 9) ? (rem - 10) + 'a' : rem + '0';
-        num = num / base;
+        int rem = num % 10;
+        str[i++] = rem + '0';
+        num = num / 10;
     }
 
     // Append negative sign for negative numbers
@@ -34,6 +32,7 @@ char *itoa(int num, char *str, int base) {
     }
 
     str[i] = '\0'; // Null-terminate string
+
     // Reverse the string
     int start = 0;
     int end = i - 1;
@@ -48,6 +47,110 @@ char *itoa(int num, char *str, int base) {
     return str;
 }
 
+char *itoa_oct(int num, char *str) {
+    // Implementation de la conversion en base octale
+    int i = 0;
+
+    // Handle 0 explicitly, otherwise empty string is printed
+    if (num == 0) {
+        str[i++] = '0';
+        str[i] = '\0';
+        return str;
+    }
+
+    // Process individual digits in reverse order
+    while (num != 0) {
+        int rem = num % 8;
+        str[i++] = rem + '0';
+        num = num / 8;
+    }
+
+    // Reverse the string
+    int start = 0;
+    int end = i - 1;
+    while (start < end) {
+        char temp = str[start];
+        str[start] = str[end];
+        str[end] = temp;
+        start++;
+        end--;
+    }
+
+    str[i] = '\0'; // Null-terminate string
+
+    return str;
+}
+
+char *itoa_hex(int num, char *str) {
+    // Implementation de la conversion en base hexadécimale
+    int i = 0;
+    const char *hex_chars = "0123456789ABCDEF";  // Hex chars in uppercase
+
+    // Handle 0 explicitly, otherwise empty string is printed
+    if (num == 0) {
+        str[i++] = '0';
+        str[i] = '\0';
+        return str;
+    }
+
+    // Process individual digits in reverse order
+    while (num != 0) {
+        int rem = num % 16;
+        str[i++] = hex_chars[rem];
+        num = num / 16;
+    }
+
+    // Reverse the string
+    int start = 0;
+    int end = i - 1;
+    while (start < end) {
+        char temp = str[start];
+        str[start] = str[end];
+        str[end] = temp;
+        start++;
+        end--;
+    }
+
+    str[i] = '\0'; // Null-terminate string
+
+    return str;
+}
+
+
+char *utoa_dec(unsigned int num, char *str) {
+    int i = 0;
+
+    // Handle 0 explicitly, otherwise empty string is printed
+    if (num == 0) {
+        str[i++] = '0';
+        str[i] = '\0';
+        return str;
+    }
+
+    // Process individual digits in reverse order
+    while (num != 0) {
+        int rem = num % 10;
+        str[i++] = rem + '0';
+        num = num / 10;
+    }
+
+    // Reverse the string
+    int start = 0;
+    int end = i - 1;
+    while (start < end) {
+        char temp = str[start];
+        str[start] = str[end];
+        str[end] = temp;
+        start++;
+        end--;
+    }
+
+    str[i] = '\0'; // Null-terminate string
+
+    return str;
+}
+
+
 // Custom implementation of printf
 int my_printf(char *restrict format, ...) {
     va_list args;
@@ -56,6 +159,8 @@ int my_printf(char *restrict format, ...) {
     int written = 0;
     char *str;
     int num;
+    unsigned int u_num;  // Use unsigned int for %u
+
 
     while (*format) {
         if (*format == '%') {
@@ -65,28 +170,21 @@ int my_printf(char *restrict format, ...) {
                 case 'd':
                     num = va_arg(args, int);
                     char numStr[12]; // Assuming a 32-bit int
-                    itoa(num, numStr, 10);
+                    itoa_dec(num, numStr);
                     written += write(1, numStr, strlen(numStr));
                     break;
 
                 case 'o':
                     num = va_arg(args, unsigned int);
                     char octalStr[12]; // Assuming a 32-bit int
-                    itoa(num, octalStr, 8);
+                    itoa_oct(num, octalStr);
                     written += write(1, octalStr, strlen(octalStr));
-                    break;
-
-                case 'u':
-                    num = va_arg(args, unsigned int);
-                    char unsignedStr[12]; // Assuming a 32-bit int
-                    itoa(num, unsignedStr, 10);
-                    written += write(1, unsignedStr, strlen(unsignedStr));
                     break;
 
                 case 'x':
                     num = va_arg(args, unsigned int);
                     char hexStr[12]; // Assuming a 32-bit int
-                    itoa(num, hexStr, 16);
+                    itoa_hex(num, hexStr);
                     written += write(1, hexStr, strlen(hexStr));
                     break;
 
@@ -97,16 +195,29 @@ int my_printf(char *restrict format, ...) {
 
                 case 's':
                     str = va_arg(args, char *);
-                    written += write(1, str, strlen(str));
+
+                    if (str != NULL) {
+                        written += write(1, str, strlen(str));
+                    } else {
+                        written += write(1, "(null)", 6);
+                    }
                     break;
 
                 case 'p':
                     num = (int)(intptr_t)va_arg(args, void *);
-                    char ptrStr[12]; // Assuming a 32-bit pointer
-                    itoa(num, ptrStr, 16);
+                    char ptrStr[20]; // Assuming a 64-bit pointer
+
+                    // Modification pour afficher l'adresse au format attendu par %p
+                    written += write(1, "0x", 2); // Print 0x prefix
+                    itoa_hex(num, ptrStr);         // Convert address to hex string
                     written += write(1, ptrStr, strlen(ptrStr));
                     break;
-
+                case 'u':
+                    u_num = va_arg(args, unsigned int);
+                    char u_num_str[12]; // Assuming a 32-bit unsigned int
+                    utoa_dec(u_num, u_num_str);
+                    written += write(1, u_num_str, strlen(u_num_str));
+                    break;
                 default:
                     written += write(1, format, 1);
                     break;
@@ -123,12 +234,9 @@ int my_printf(char *restrict format, ...) {
 }
 
 int main() {
-    my_printf("Hello, %s! My favorite number is %d. Pointer: %p\n", "World", 42, (void *)main);
+    my_printf("Decimal: %d, Octal: %o, Hexadecimal: %x\n", 42, 42, 42);
     return 0;
 }
-
-
-
 
 
 

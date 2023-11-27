@@ -1,24 +1,36 @@
-//code effectuant la tache en indic en dessous de ce code
-//ce code est present en deux version, la deuxieme version commente est plus compact
+// ================================
+//fivhier d entete my mastermind.h:
+//=================================
+/**
+#ifndef MY_MASTERMIND_H
+#define MY_MASTERMIND_H
 
+#define CODE_LENGTH 4
+#define MAX_NUMBER_POSSIBILITY 10
+#define PIECE_COLORS_LENGTH 9
+#define PIECE_COLORS "012345678"
+#define MAX_INPUT_LENGTH 100
+
+
+void generate_secret_code(char *secret_code);
+int validate_input(char *input);
+void evaluate_guess(char *guess, char *secret_code, int *bonnePlace, int *mauvaisePlace);
+void display_round_result(int bonnePlace, int mauvaisePlace);
+#endif 
+**/
+
+#include "my_mastermind.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
 #include <unistd.h>
-//===================================
-//====definition des constantes======
-//===================================
-#define CODE_LENGTH 4
-#define MAX_nombre_Possibilite 10
-#define PIECE_COLORS_LENGTH 9
-#define PIECE_COLORS "012345678"
-//===========================================
-//====definition et ecriture de fonctions====
-//===========================================
 
+//===================================
+//====fichier all_function.c   ======
+//===================================
 //fonctions de generation automatique du code secret
-void generate_secret_code(char *secret_code) {
+void generate_secret_code(char* secret_code) {
     int i;
     srand(time(NULL));
     for (i = 0; i < CODE_LENGTH; i++) {
@@ -26,43 +38,45 @@ void generate_secret_code(char *secret_code) {
     }
     secret_code[CODE_LENGTH] = '\0';
 }
+
 //==================================================================
 //====fonction de validation de l'enntree standard de l'utilisateur=
 //==================================================================
-int validate_input(char *input) {
-    //test de validite de la longueur et de chaque caractere
-    int taille = 0;
-    while (input[taille] != '\0') {
-        taille++;
-    }
+int validate_input(char* input) {
+  int valid = 1;
+  int input_length = 0;
 
-    bool taille_valid = (taille == CODE_LENGTH); 
-    bool tous_caract_valid = true;
+  while (input[input_length] != '\0') {
+    input_length++;
+  }
 
+  if (input_length != CODE_LENGTH) {
+    valid = 0;
+  } else {
+    int valid_input = 1;
     for (int i = 0; i < CODE_LENGTH; i++) {
-        bool caract_valid = false;
-        for (int j = 0; PIECE_COLORS[j] != '\0'; j++) {
-            if (input[i] == PIECE_COLORS[j]) {
-                caract_valid = true;
-                break;
-            }
+      valid_input = 0;
+      for (int j = 0; j < PIECE_COLORS_LENGTH; j++) {
+        if (input[i] == PIECE_COLORS[j]) {
+          valid_input = 1;
+          break;
         }
-        if (!caract_valid) {
-            tous_caract_valid = false;  
-            break;
-        }
+      }
+      if (!valid_input) {
+        valid = 0;
+        break;
+      }
     }
-
-    return taille_valid && tous_caract_valide;
+  }
+  
+  return valid;
 }
 //===================================
 //====fonction d evaluation source===
 //===================================
-void evaluate_guess(char *guess, char *secret_code, int *bonnePlace, int *mauvaisePlace) {
+void evaluate_guess(char* guess, char* secret_code, int* bonnePlace, int* mauvaisePlace) {
     *bonnePlace = 0;
     *mauvaisePlace = 0;
-
-
     for (int i = 0; i < CODE_LENGTH; i++) {
         if (guess[i] == secret_code[i]) {
             (*bonnePlace)++;
@@ -75,23 +89,33 @@ void evaluate_guess(char *guess, char *secret_code, int *bonnePlace, int *mauvai
             }
         }
     }
+    //   printf("Current guess: %s, Well placed pieces: %d, Misplaced pieces: %d\n", guess, *bonnePlace, *mauvaisePlace);
+
 }
 
 //===================================
 //====fonction d'affichage===========
 //===================================
-void display_round_result(int round, int bonnePlace, int mauvaisePlace) {
-    printf("---\nRound %d\n>Well placed pieces: %d\n>Misplaced pieces: %d\n", round, bonnePlace, mauvaisePlace);
+void display_round_result(int bonnePlace, int mauvaisePlace) {
+
+    printf("Well placed pieces: %d\nMisplaced pieces: %d\n",bonnePlace, mauvaisePlace);
+
 }
+
 
 //===================================
 //====entree et test dans le main====
 //===================================
-int main(int argc, char *argv[]) {
+int main(int argc, char* argv[]) {
 
-    char secret_code[CODE_LENGTH + 1];
-    char guess[CODE_LENGTH + 1];
+    int new_long = CODE_LENGTH + 1;
+    char secret_code[new_long];
+    char guess[new_long];
+    // char inter[new_long];
     int bonnePlace, mauvaisePlace;
+    char c;
+    // char input[100];
+    // int bytes_read;
 
     if (argc > 1 && strcmp(argv[1], "-c") == 0) {
         if (validate_input(argv[2])) {
@@ -100,153 +124,66 @@ int main(int argc, char *argv[]) {
                 secret_code[i] = argv[2][i];
             }
         } else {
-            printf("Invalid secret code. Exiting.\n");
+            printf("Invalid secret code Exiting\n");
             return 1;
         }
     } else {
         generate_secret_code(secret_code);
     }
 
-    int nombre_Possibilite = (argc > 3 && strcmp(argv[3], "-t") == 0) ? atoi(argv[4]) : MAX_nombre_Possibilite;
+    int nombre_Possibilite = (argc > 3 && strcmp(argv[3], "-t") == 0) ? atoi(argv[4]) : MAX_NUMBER_POSSIBILITY;
 
     printf("Will you find the secret code?\nPlease enter a valid guess\n");
 
+    // inter[0] = guess[0];
     for (int round = 0; round < nombre_Possibilite; round++) {
-        printf("---\nRound %d\n>", round);
-        if (read(0, guess, CODE_LENGTH) < 0) {
-            //si l'user press ctrl + d qui correspond a une erreur de lecture
-            // fin de fichier (Ctrl + D)
-            break;
+    //     printf("Round %d\n", round);
+    //    *guess = '\0';
+        int i = 0;
+        while( (read(0, &c, 1) == 1)){
+            if ( c == '\n') {
+                guess[i] = '\0';
+                break;
+            }
+            guess[i] = c;
+            i++;
         }
-
-        guess[CODE_LENGTH] = '\0';
+        // guess[CODE_LENGTH] = '\0';
 
         if (!validate_input(guess)) {
-            printf("Wrong input!\n");
+            // printf("Will you find the secret code!\n");
             continue;
         }
 
         evaluate_guess(guess, secret_code, &bonnePlace, &mauvaisePlace);
-        display_round_result(round, bonnePlace, mauvaisePlace);
-
+        
         if (bonnePlace == CODE_LENGTH) {
             printf("Congratz! You did it!\n");
+            // write(STDOUT_FILENO, "Congratz! You did it!\n", 23);
             return 0;
         }
+        display_round_result(bonnePlace, mauvaisePlace);
     }
 
     printf("Out of attempts. The secret code was %s\n", secret_code);
     return 0;
 }
+
+
+
+
+
+
+
+
+
+
+
 
 /**
  ==============================
  ===deuxieme version du code===
  ==============================
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <time.h>
-#include <unistd.h>
-//===================================
-//====definition des constantes======
-//===================================
-#define CODE_LENGTH 4
-#define MAX_ATTEMPTS 10
-#define PIECE_COLORS "012345678"
-//===========================================
-//====definition et ecriture de fonctions====
-//===========================================
-
-//fonctions de generation automatique du code secret
-void generate_secret_code(char *secret_code) {
-    int i;
-    srand(time(NULL));
-    for (i = 0; i < CODE_LENGTH; i++) {
-        secret_code[i] = PIECE_COLORS[rand() % strlen(PIECE_COLORS)];
-    }
-    secret_code[CODE_LENGTH] = '\0';
-}
-//==================================================================
-//====fonction de validation de l'enntree standard de l'utilisateur=
-//==================================================================
-int validate_input(char *input) {
-    return strlen(input) == CODE_LENGTH && strspn(input, PIECE_COLORS) == CODE_LENGTH;
-}
-//===================================
-//====fonction d evaluation source===
-//===================================
-void evaluate_guess(char *guess, char *secret_code, int *well_placed, int *misplaced) {
-    *well_placed = 0;
-    *misplaced = 0;
-
-    for (int i = 0; i < CODE_LENGTH; i++) {
-        if (guess[i] == secret_code[i]) {
-            (*well_placed)++;
-        } else if (strchr(secret_code, guess[i]) != NULL) {
-            (*misplaced)++;
-        }
-    }
-}
-//===================================
-//====fonction d'affichage===========
-//===================================
-void display_round_result(int round, int well_placed, int misplaced) {
-    printf("---\nRound %d\n>Well placed pieces: %d\n>Misplaced pieces: %d\n", round, well_placed, misplaced);
-}
-
-//===================================
-//====entree et test dans le main====
-//===================================
-int main(int argc, char *argv[]) {
-    char secret_code[CODE_LENGTH + 1];
-    char guess[CODE_LENGTH + 1];
-    int well_placed, misplaced;
-
-    if (argc > 1 && strcmp(argv[1], "-c") == 0) {
-        if (validate_input(argv[2])) {
-            strcpy(secret_code, argv[2]);
-        } else {
-            printf("Invalid secret code. Exiting.\n");
-            return 1;
-        }
-    } else {
-        generate_secret_code(secret_code);
-    }
-
-    int attempts = (argc > 3 && strcmp(argv[3], "-t") == 0) ? atoi(argv[4]) : MAX_ATTEMPTS;
-
-    printf("Will you find the secret code?\nPlease enter a valid guess\n");
-
-    for (int round = 0; round < attempts; round++) {
-        printf("---\nRound %d\n>", round);
-        if (read(0, guess, CODE_LENGTH) < 0) {
-            //si l'user press ctrl + d qui correspond a une erreur de lecture
-            // fin de fichier (Ctrl + D)
-            break; 
-        }
-
-        guess[CODE_LENGTH] = '\0';
-
-        if (!validate_input(guess)) {
-            printf("Wrong input!\n");
-            continue;
-        }
-
-        evaluate_guess(guess, secret_code, &well_placed, &misplaced);
-        display_round_result(round, well_placed, misplaced);
-
-        if (well_placed == CODE_LENGTH) {
-            printf("Congratz! You did it!\n");
-            return 0;
-        }
-    }
-
-    printf("Out of attempts. The secret code was %s\n", secret_code);
-    return 0;
-}
-
 
 **/
 
@@ -363,4 +300,12 @@ man 2 read
 man rand
 Makefile, case sensitivity is important.
 **/
+// ==============================================
+// ==============================================
+// ==============================================
+// ==============================================
+// ==============================================
+// ==============================================
+// ==============================================
 
+//code effectuant la tache en indic en dessous de ce code
