@@ -1,10 +1,29 @@
 #include <unistd.h>
 #include <stdarg.h>
 #include <string.h>
+#include  <stdio.h>
+
+
+char* reverse_call(char* str, int length){
+       // Reverse the string
+    int start = 0;
+    int end = length - 1;
+    while (start < end) {
+        char temp = str[start];
+        str[start] = str[end];
+        str[end] = temp;
+        start++;
+        end--;
+    }
+
+    str[length] = '\0'; // Null-terminate string
+
+    return str;
+}
 
 char *itoa_dec(int num, char *str) {
     int i = 0;
-    int isNegative = 0;
+    int is_negative = 0;
 
     // Handle 0 explicitly, otherwise empty string is printed
     if (num == 0) {
@@ -15,7 +34,7 @@ char *itoa_dec(int num, char *str) {
 
     // Handle negative numbers
     if (num < 0) {
-        isNegative = 1;
+        is_negative = 1;
         num = -num;
     }
 
@@ -27,24 +46,12 @@ char *itoa_dec(int num, char *str) {
     }
 
     // Append negative sign for negative numbers
-    if (isNegative) {
+    if (is_negative) {
         str[i++] = '-';
     }
 
-    str[i] = '\0'; // Null-terminate string
-
-    // Reverse the string
-    int start = 0;
-    int end = i - 1;
-    while (start < end) {
-        char temp = str[start];
-        str[start] = str[end];
-        str[end] = temp;
-        start++;
-        end--;
-    }
-
-    return str;
+    
+    return reverse_call(str,i);
 }
 
 char *itoa_oct(int num, char *str) {
@@ -65,20 +72,7 @@ char *itoa_oct(int num, char *str) {
         num = num / 8;
     }
 
-    // Reverse the string
-    int start = 0;
-    int end = i - 1;
-    while (start < end) {
-        char temp = str[start];
-        str[start] = str[end];
-        str[end] = temp;
-        start++;
-        end--;
-    }
-
-    str[i] = '\0'; // Null-terminate string
-
-    return str;
+   return reverse_call(str,i);
 }
 
 char *itoa_hex(int num, char *str) {
@@ -100,9 +94,26 @@ char *itoa_hex(int num, char *str) {
         num = num / 16;
     }
 
+   return reverse_call(str,i);
+}
+
+char *intptr_to_hex(long num, char *str) {
+    // Implementation de la conversion en base hexadécimale
+    long i = 0;
+    const char *hex_chars = "0123456789abcdef";  // Hex chars in uppercase
+
+    while (num != 0) {
+        long rem = num % 16;
+        str[i++] = hex_chars[rem];
+        num = num / 16;
+    }
+    str[i] = 'x';
+    i ++;
+    str[i] = '0';
+    i ++;
     // Reverse the string
-    int start = 0;
-    int end = i - 1;
+    long start = 0;
+    long end = i - 1;
     while (start < end) {
         char temp = str[start];
         str[start] = str[end];
@@ -110,12 +121,9 @@ char *itoa_hex(int num, char *str) {
         start++;
         end--;
     }
-
     str[i] = '\0'; // Null-terminate string
-
     return str;
 }
-
 
 char *utoa_dec(unsigned int num, char *str) {
     int i = 0;
@@ -134,22 +142,8 @@ char *utoa_dec(unsigned int num, char *str) {
         num = num / 10;
     }
 
-    // Reverse the string
-    int start = 0;
-    int end = i - 1;
-    while (start < end) {
-        char temp = str[start];
-        str[start] = str[end];
-        str[end] = temp;
-        start++;
-        end--;
-    }
-
-    str[i] = '\0'; // Null-terminate string
-
-    return str;
+    return reverse_call(str,i);
 }
-
 
 // Custom implementation of printf
 int my_printf(char *restrict format, ...) {
@@ -160,6 +154,7 @@ int my_printf(char *restrict format, ...) {
     char *str;
     int num;
     unsigned int u_num;  // Use unsigned int for %u
+    intptr_t ptr_value;
 
 
     while (*format) {
@@ -169,9 +164,9 @@ int my_printf(char *restrict format, ...) {
             switch (*format) {
                 case 'd':
                     num = va_arg(args, int);
-                    char numStr[12]; // Assuming a 32-bit int
-                    itoa_dec(num, numStr);
-                    written += write(1, numStr, strlen(numStr));
+                    char num_str[12]; // Assuming a 32-bit int
+                    itoa_dec(num, num_str);
+                    written += write(1, num_str, strlen(num_str));
                     break;
 
                 case 'o':
@@ -183,9 +178,9 @@ int my_printf(char *restrict format, ...) {
 
                 case 'x':
                     num = va_arg(args, unsigned int);
-                    char hexStr[12]; // Assuming a 32-bit int
-                    itoa_hex(num, hexStr);
-                    written += write(1, hexStr, strlen(hexStr));
+                    char hex_str[12]; // Assuming a 32-bit int
+                    itoa_hex(num, hex_str);
+                    written += write(1, hex_str, strlen(hex_str));
                     break;
 
                 case 'c':
@@ -204,14 +199,15 @@ int my_printf(char *restrict format, ...) {
                     break;
 
                 case 'p':
-                    num = (int)(intptr_t)va_arg(args, void *);
-                    char ptrStr[20]; // Assuming a 64-bit pointer
 
-                    // Modification pour afficher l'adresse au format attendu par %p
-                    written += write(1, "0x", 2); // Print 0x prefix
-                    itoa_hex(num, ptrStr);         // Convert address to hex string
-                    written += write(1, ptrStr, strlen(ptrStr));
+                    ptr_value = (intptr_t)va_arg(args, void *);
+                    char hex_strs[16]; // Assuming a 64-bit pointer
+                    intptr_to_hex(ptr_value, hex_strs);
+
+                    written += write(1, hex_strs, strlen(hex_strs));
+                   
                     break;
+                    
                 case 'u':
                     u_num = va_arg(args, unsigned int);
                     char u_num_str[12]; // Assuming a 32-bit unsigned int
@@ -233,12 +229,16 @@ int my_printf(char *restrict format, ...) {
     return written;
 }
 
+
 int main() {
-    my_printf("Decimal: %d, Octal: %o, Hexadecimal: %x\n", 42, 42, 42);
+    int var = 24;
+    my_printf("Hexadecimal: %x, Octal: %o,  Decimal: %d, pointeur: %p\n", 10, 10, 10, &var);
+
     return 0;
-}
-
-
+}// // printf("printf() %%p: %p\n", &var);
+    // my_printf("my_printf() %%p: %p\n", &var);
+    // printf("printf() %%x: %X\n", 1234);
+    // my_printf("my_printf() %%x: %x\n", 1234);
 
 
 

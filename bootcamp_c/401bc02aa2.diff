@@ -1,0 +1,365 @@
+diff --git a/my_printf b/my_printf
+index 4dbb817..dd59eef 100755
+Binary files a/my_printf and b/my_printf differ
+diff --git a/my_printf.c b/my_printf.c
+index 6bfac99..42b70d1 100644
+--- a/my_printf.c
++++ b/my_printf.c
+@@ -2,159 +2,145 @@
+ #include <stdarg.h>
+ #include <string.h>
+ 
+-char *itoa_dec(int num, char *str) {
++
++char *entierEnDecimal(int nombre, char *chaine) {
+     int i = 0;
+     int isNegative = 0;
+ 
+-    // Handle 0 explicitly, otherwise empty string is printed
+-    if (num == 0) {
+-        str[i++] = '0';
+-        str[i] = '\0';
+-        return str;
++    if (nombre == 0) {
++        chaine[i++] = '0';
++        chaine[i] = '\0';
++        return chaine;
+     }
+ 
+-    // Handle negative numbers
+-    if (num < 0) {
++    if (nombre < 0) {
+         isNegative = 1;
+-        num = -num;
++        nombre = -nombre;
+     }
+ 
+-    // Process individual digits in reverse order
+-    while (num != 0) {
+-        int rem = num % 10;
+-        str[i++] = rem + '0';
+-        num = num / 10;
++    while (nombre != 0) {
++        int rem = nombre % 10;
++        chaine[i++] = rem + '0';
++        nombre = nombre / 10;
+     }
+ 
+-    // Append negative sign for negative numbers
++    // Append negative sign for negative nbrbers
+     if (isNegative) {
+-        str[i++] = '-';
++        chaine[i++] = '-';
+     }
+ 
+-    str[i] = '\0'; // Null-terminate string
++    chaine[i] = '\0'; 
+ 
+-    // Reverse the string
+     int start = 0;
+     int end = i - 1;
+     while (start < end) {
+-        char temp = str[start];
+-        str[start] = str[end];
+-        str[end] = temp;
++        char temp = chaine[start];
++        chaine[start] = chaine[end];
++        chaine[end] = temp;
+         start++;
+         end--;
+     }
+ 
+-    return str;
++    return chaine;
+ }
+ 
+-char *itoa_oct(int num, char *str) {
++char *entierEnOctal(int nombre, char *chaine) {
+     // Implementation de la conversion en base octale
+     int i = 0;
+ 
+-    // Handle 0 explicitly, otherwise empty string is printed
+-    if (num == 0) {
+-        str[i++] = '0';
+-        str[i] = '\0';
+-        return str;
++    if (nombre == 0) {
++        chaine[i++] = '0';
++        chaine[i] = '\0';
++        return chaine;
+     }
+ 
+-    // Process individual digits in reverse order
+-    while (num != 0) {
+-        int rem = num % 8;
+-        str[i++] = rem + '0';
+-        num = num / 8;
++    while (nombre != 0) {
++        int rem = nombre % 8;
++        chaine[i++] = rem + '0';
++        nombre = nombre / 8;
+     }
+ 
+-    // Reverse the string
+     int start = 0;
+     int end = i - 1;
+     while (start < end) {
+-        char temp = str[start];
+-        str[start] = str[end];
+-        str[end] = temp;
++        char temp = chaine[start];
++        chaine[start] = chaine[end];
++        chaine[end] = temp;
+         start++;
+         end--;
+     }
+ 
+-    str[i] = '\0'; // Null-terminate string
+-
+-    return str;
++    chaine[i] = '\0'; 
++    return chaine;
+ }
+ 
+-char *itoa_hex(int num, char *str) {
++char *entierEnHexa(int nombre, char *chaine) {
+     // Implementation de la conversion en base hexadécimale
+     int i = 0;
+-    const char *hex_chars = "0123456789ABCDEF";  // Hex chars in uppercase
++    const char *hex_chars = "0123456789ABCDEF"; 
+ 
+-    // Handle 0 explicitly, otherwise empty string is printed
+-    if (num == 0) {
+-        str[i++] = '0';
+-        str[i] = '\0';
+-        return str;
++    if (nombre == 0) {
++        chaine[i++] = '0';
++        chaine[i] = '\0';
++        return chaine;
+     }
+ 
+-    // Process individual digits in reverse order
+-    while (num != 0) {
+-        int rem = num % 16;
+-        str[i++] = hex_chars[rem];
+-        num = num / 16;
++    while (nombre != 0) {
++        int rem = nombre % 16;
++        chaine[i++] = hex_chars[rem];
++        nombre = nombre / 16;
+     }
+ 
+-    // Reverse the string
+     int start = 0;
+     int end = i - 1;
+     while (start < end) {
+-        char temp = str[start];
+-        str[start] = str[end];
+-        str[end] = temp;
++        char temp = chaine[start];
++        chaine[start] = chaine[end];
++        chaine[end] = temp;
+         start++;
+         end--;
+     }
+ 
+-    str[i] = '\0'; // Null-terminate string
++    chaine[i] = '\0'; 
+ 
+-    return str;
++    return chaine;
+ }
+ 
+ 
+-char *utoa_dec(unsigned int num, char *str) {
++char *entierNonSigneEnDecimal(unsigned int nombre, char *chaine) {
+     int i = 0;
+ 
+-    // Handle 0 explicitly, otherwise empty string is printed
+-    if (num == 0) {
+-        str[i++] = '0';
+-        str[i] = '\0';
+-        return str;
++    if (nombre == 0) {
++        chaine[i++] = '0';
++        chaine[i] = '\0';
++        return chaine;
+     }
+ 
+-    // Process individual digits in reverse order
+-    while (num != 0) {
+-        int rem = num % 10;
+-        str[i++] = rem + '0';
+-        num = num / 10;
++    while (nombre != 0) {
++        int rem = nombre % 10;
++        chaine[i++] = rem + '0';
++        nombre = nombre / 10;
+     }
+ 
+-    // Reverse the string
+     int start = 0;
+     int end = i - 1;
+     while (start < end) {
+-        char temp = str[start];
+-        str[start] = str[end];
+-        str[end] = temp;
++        char temp = chaine[start];
++        chaine[start] = chaine[end];
++        chaine[end] = temp;
+         start++;
+         end--;
+     }
+ 
+-    str[i] = '\0'; // Null-terminate string
++    chaine[i] = '\0'; 
+ 
+-    return str;
++    return chaine;
+ }
+ 
+-int int_to_hex_str(char *dest, size_t size, intptr_t value) {
++int pointeurEntierEnHexa(char *dest, size_t size, intptr_t value) {
+     if (size < 3) {
+         return -1; // Taille insuffisante pour stocker 0x et le caractère nul
+     }
+-
+     // Conversion du pointeur en chaîne hexadécimale
+     dest[0] = '0';
+     dest[1] = 'x';
+@@ -164,79 +150,83 @@ int int_to_hex_str(char *dest, size_t size, intptr_t value) {
+         dest[i + 2] = hex_chars[value & 0xF];
+         value >>= 4;
+     }
+-    dest[sizeof(value)*2 + 2] = '\0'; // Ajout du caractère nul à la fin de la chaîne
++    dest[sizeof(value)*2 + 2] = '\0'; 
+     return 0;
+ }
+ 
+-// Custom implementation of printf
++// implementation de la fonction majeur my_printf
+ int my_printf(char *restrict format, ...) {
+     va_list args;
+     va_start(args, format);
+ 
+     int written = 0;
+-    char *str;
+-    int num;
+-    unsigned int u_num;  // Use unsigned int for %u
+-    intptr_t ptr_value;
++    char *chaine;
++    int nombre;
++    // nbrerique non signe pour  %u
++    unsigned int u_nbr;  
++    intptr_t pointeur;
+ 
+ 
+     while (*format) {
+         if (*format == '%') {
+-            format++;
++            format++; 
+ 
+             switch (*format) {
+-                case 'd':
+-                    num = va_arg(args, int);
+-                    char numStr[12]; // Assuming a 32-bit int
+-                    itoa_dec(num, numStr);
+-                    written += write(1, numStr, strlen(numStr));
+-                    break;
+ 
+                 case 'o':
+-                    num = va_arg(args, unsigned int);
+-                    char octalStr[12]; // Assuming a 32-bit int
+-                    itoa_oct(num, octalStr);
+-                    written += write(1, octalStr, strlen(octalStr));
++                    nombre = va_arg(args, unsigned int);
++                    char octalchaine[12]; 
++                    entierEnOctal(nombre, octalchaine);
++                    written += write(1, octalchaine, strlen(octalchaine));
+                     break;
+ 
+-                case 'x':
+-                    num = va_arg(args, unsigned int);
+-                    char hexStr[12]; // Assuming a 32-bit int
+-                    itoa_hex(num, hexStr);
+-                    written += write(1, hexStr, strlen(hexStr));
++                case 'd':
++                    nombre = va_arg(args, int);
++                    char nbrchaine[12]; 
++                    entierEnDecimal(nombre, nbrchaine);
++                    written += write(1, nbrchaine, strlen(nbrchaine));
+                     break;
+ 
+                 case 'c':
+-                    num = va_arg(args, int);
+-                    written += write(1, &num, 1);
++                    nombre = va_arg(args, int);
++                    written += write(1, &nombre, 1);
++                    break;
++
++                case 'x':
++                    nombre = va_arg(args, unsigned int);
++                    char hexchaine[12]; 
++                    entierEnHexa(nombre, hexchaine);
++                    written += write(1, hexchaine, strlen(hexchaine));
+                     break;
+ 
+                 case 's':
+-                    str = va_arg(args, char *);
++                    chaine = va_arg(args, char *);
+ 
+-                    if (str != NULL) {
+-                        written += write(1, str, strlen(str));
++                    if (chaine != NULL) {
++                        written += write(1, chaine, strlen(chaine));
+                     } else {
+                         written += write(1, "(null)", 6);
+                     }
+                     break;
+ 
++                case 'u':
++                    u_nbr = va_arg(args, unsigned int);
++                    char u_nbr_chaine[12]; 
++                    entierNonSigneEnDecimal(u_nbr, u_nbr_chaine);
++                    written += write(1, u_nbr_chaine, strlen(u_nbr_chaine));
++                    break;
++
+                 case 'p':
+-                    ptr_value = (intptr_t)va_arg(args, void *);
+-                    char hexStrs[18]; // Taille suffisante pour stocker la représentation hexadécimale du pointeur
+-                    if (int_to_hex_str(hexStr, sizeof(hexStrs), ptr_value) == 0) {
+-                        written += write(1, hexStrs, strlen(hexStrs));
++                    pointeur = (intptr_t)va_arg(args, void *);
++                    char hexchaines[18]; 
++                 
++                    if (pointeurEntierEnHexa(hexchaines, sizeof(hexchaines), pointeur) == 0) {
++                        written += write(1, hexchaines, strlen(hexchaines));
+                     } else {
+-                        // Gestion de l'erreur de conversion
+-                        written += write(1, "ERROR", 5); // Votre gestion de l'erreur ici
++                        written += write(1, "ERROR", 5);
+                     }
+                     break;
+-                case 'u':
+-                    u_num = va_arg(args, unsigned int);
+-                    char u_num_str[12]; // Assuming a 32-bit unsigned int
+-                    utoa_dec(u_num, u_num_str);
+-                    written += write(1, u_num_str, strlen(u_num_str));
+-                    break;
++
+                 default:
+                     written += write(1, format, 1);
+                     break;
+@@ -253,6 +243,6 @@ int my_printf(char *restrict format, ...) {
+ }
+ 
+ int main() {
+-    my_printf("Decimal: %d, Octal: %o, Hexadecimal: %x\n", 42, 42, 42);
++    my_printf("Hexadecimal: %x, Octal: %o,  Decimal: %d \n", 10, 10, 10);
+     return 0;
+ }
+\ No newline at end of file
+diff --git a/my_printf.o b/my_printf.o
+index 620b222..7704544 100644
+Binary files a/my_printf.o and b/my_printf.o differ
