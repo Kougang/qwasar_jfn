@@ -2,7 +2,7 @@
 ***
 
 ## Task
-the problem was to be able to begin in c and the challenge was to make the test
+the problem was to be able to begin in c and the challenge was to pass the test
 ## Description
 i made many research in google and i'm watching the videos in tutorial section
 ## Installation

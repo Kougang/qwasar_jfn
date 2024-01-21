@@ -232,9 +232,13 @@ index 6bfac99..42b70d1 100644
          dest[i + 2] = hex_chars[value & 0xF];
          value >>= 4;
      }
--    dest[sizeof(value)*2 + 2] = '\0'; // Ajout du caractère nul à la fin de la chaîne
-+    dest[sizeof(value)*2 + 2] = '\0'; 
-     return 0;
+-     if (size < 3) {
+         return -1; // Taille insuffisante pour stocker 0x et le caractère nul
+     }
+-
+     // Conversion du pointeur en chaîne hexadécimale
+     dest[0] = '0';
+     dest[1] = 'x';
  }
  
 -// Custom implementation of printf
@@ -341,6 +345,7 @@ index 6bfac99..42b70d1 100644
 +                        written += write(1, "ERROR", 5);
                      }
                      break;
+                     
 -                case 'u':
 -                    u_num = va_arg(args, unsigned int);
 -                    char u_num_str[12]; // Assuming a 32-bit unsigned int
