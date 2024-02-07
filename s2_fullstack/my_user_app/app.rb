@@ -7,9 +7,8 @@ set :port, 8080
 enable :sessions
 
 get '/' do
-    # content_type :html
-   @users= User.all()
-   erb:index
+    @users = User.all
+    erb :index
 end
 
 get '/users' do
@@ -19,7 +18,6 @@ get '/users' do
 end
 
 post '/users' do
-    content_type :json
     if params[:firstname]
         # user_info = JSON.parse(request.body.read)
         user = User.create(params)
@@ -63,15 +61,21 @@ put '/users' do
   
 end
 
-delete '/sign_out' do
+delete '/sign_out' do 
     id = session[:user_id]
-    session[:user_id] = nil
-    status 204    
-end
-    
-delete '/users' do
+    if id
+      session.delete(user_id)
+    else
+        status 401
+    end
+  end
+  
+  delete '/users' do 
     id = session[:user_id]
-    User.destroy(id) 
-    session[:user_id] = nil 
-    status 204
-end
+    if id
+      session.destroy(id)
+      session.delete(user_id)
+    else
+        status 401
+     end
+  end

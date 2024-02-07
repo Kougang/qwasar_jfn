@@ -12,20 +12,15 @@
                 <th>Age</th>
                 <th>Email</th>
             </tr>
-            <% if @users.any? %>
-                <% users.each do |user| %>
+                <% @users.each do |user| %>
                 <tr>
-                    <td> <%= user["firstname"] %> </td>
-                    <td> <%= user["lastname"] %>  </td>
-                    <td> <%= user["age"] %>       </td>
-                    <td> <%= user["email"] %>     </td>
+                    <td> <%= user['firstname'] %> </td>
+                    <td> <%= user['lastname'] %>  </td>
+                    <td> <%= user['age'] %>       </td>
+                    <td> <%= user['email'] %>     </td>
                 </tr>
-                <% end %>
-                <% else %>
-                    <tr>
-                        <t>database is empty</td>
-                    </tr>
-                <% end %>
+        <% end %>
+                
         </table>
     </body>
 </html>
