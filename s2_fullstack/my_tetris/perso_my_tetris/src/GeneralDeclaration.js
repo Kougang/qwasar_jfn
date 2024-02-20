@@ -26,7 +26,14 @@ var grille = new Array(LARGEUR_GRILLE);
 let formeSuivante;
 
 let score = 0;
+let scoreFormY = 0;
+let level = 0;
+
 let dansConditionCollisionComptePoint = 0;
+let isPaused = false;
+let isGameOver = false;
+
+let countdown = 3;
 // !!!Tableau de définition des couleurs
 
 let couleursFormes = [
@@ -43,6 +50,7 @@ let couleursFormes = [
 
 // Tableau de définition des formes
 let forme = new Array();
+let formeAntiHoraire = new Array();
 // L1-Forme
 forme[0] = [
   // L1-Forme
@@ -71,6 +79,35 @@ forme[0] = [
     [1, 1, 0],
   ],
 ];
+// L1-formeAntiHoraire
+formeAntiHoraire[0] = [
+  // L1-Forme
+  [
+    // rotation 0
+    [0, 0, 0],
+    [1, 0, 0],
+    [1, 1, 1],
+  ],
+  [
+    // rotation 1
+    [0, 1, 0],
+    [0, 1, 0],
+    [1, 1, 0],
+  ],
+  [
+    // rotation 2
+    [0, 0, 0],
+    [1, 1, 1],
+    [0, 0, 1],
+  ],
+  [
+    // rotation 3
+    [0, 1, 1],
+    [0, 1, 0],
+    [0, 1, 0],
+  ],
+];
+
 // L2-Forme
 forme[1] = [
   // L2-Forme
@@ -99,6 +136,34 @@ forme[1] = [
     [0, 1, 0],
   ],
 ];
+// L2-formeAntiHoraire
+formeAntiHoraire[1] = [
+  [
+    // rotation 0
+    [0, 0, 0],
+    [0, 0, 1],
+    [1, 1, 1],
+  ],
+  [
+    // rotation 1
+    [1, 1, 0],
+    [0, 1, 0],
+    [0, 1, 0],
+  ],
+  [
+    // rotation 2
+    [0, 0, 0],
+    [1, 1, 1],
+    [1, 0, 0],
+  ],
+  [
+    // rotation 3
+    [0, 1, 0],
+    [0, 1, 0],
+    [0, 1, 1],
+  ],
+];
+
 // J1-Forme 2
 forme[2] = [
   // J1-Forme 2
@@ -115,6 +180,23 @@ forme[2] = [
     [0, 0, 1],
   ],
 ];
+// J1-formeAntiHoraire
+formeAntiHoraire[2] = [
+  [
+    // rotation 0 (cette forme là n'a besoin que de 2 rotations)
+    [0, 0, 0],
+    [0, 1, 1],
+    [1, 1, 0],
+  ],
+
+  [
+    // rotation 1
+    [1, 0, 0],
+    [1, 1, 0],
+    [0, 1, 0],
+  ],
+];
+
 // J2-Forme 2
 forme[3] = [
   // J2-Forme 2
@@ -131,17 +213,42 @@ forme[3] = [
     [0, 1, 0],
   ],
 ];
+// J2-formeAntiHoraire
+formeAntiHoraire[3] = [
+  // J2-Forme 2
+  [
+    // rotation 0 (cette forme là n'a besoin que de 2 rotations)
+    [0, 0, 0],
+    [1, 1, 0],
+    [0, 1, 1],
+  ],
+  [
+    // rotation 1
+    [0, 1, 0],
+    [1, 1, 0],
+    [1, 0, 0],
+  ],
+];
+
 // carre-forme
 forme[4] = [
   // carre-forme
   [
     // rotation 0
-    [0, 0, 0, 0],
-    [0, 1, 1, 0],
-    [0, 1, 1, 0],
-    [0, 0, 0, 0],
+    [1, 1],
+    [1, 1],
   ],
 ];
+// carre-formeAntiHoraire
+formeAntiHoraire[4] = [
+  // carre-forme
+  [
+    // rotation 0
+    [1, 1],
+    [1, 1],
+  ],
+];
+
 // barre-forme
 forme[5] = [
   // barre-forme
@@ -160,6 +267,25 @@ forme[5] = [
     [0, 0, 1, 0],
   ],
 ];
+// barre-formeAntiHoraire
+formeAntiHoraire[5] = [
+  // barre-forme
+  [
+    // rotation 0
+    [0, 0, 0, 0],
+    [0, 0, 0, 0],
+    [1, 1, 1, 1],
+    [0, 0, 0, 0],
+  ],
+  [
+    // rotation 1
+    [0, 0, 1, 0],
+    [0, 0, 1, 0],
+    [0, 0, 1, 0],
+    [0, 0, 1, 0],
+  ],
+];
+
 // T-forme
 forme[6] = [
   // T-forme
@@ -188,5 +314,33 @@ forme[6] = [
     [0, 1, 0],
   ],
 ];
+// T-formeAntiHoraire
+formeAntiHoraire[6] = [
+  // T-forme
+  [
+    // rotation 0
+    [0, 1, 0],
+    [1, 1, 1],
+    [0, 0, 0],
+  ],
 
-// export { numForme, rotation, couleursFormes, forme };
+  [
+    // rotation 1
+    [0, 1, 0],
+    [1, 1, 0],
+    [0, 1, 0],
+  ],
+
+  [
+    [0, 0, 0],
+    [1, 1, 1],
+    [0, 1, 0],
+  ],
+  [
+    [0, 1, 0],
+    [0, 1, 1],
+    [0, 1, 0],
+  ],
+];
+
+//  { numForme, rotation, couleursFormes, forme };

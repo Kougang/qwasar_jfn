@@ -23,6 +23,7 @@ function start_html_server() {
           contentType = "text/javascript";
           break;
       }
+
       console.log(path);
       response.writeHead(200, { "Content-Type": contentType });
       response.write(fs.readFileSync(path, "utf8"));

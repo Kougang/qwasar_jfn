@@ -35,3 +35,5 @@ function verifierLignes() {
     }
   }
 }
+
+// export default { effaceLigne, verifierLignes };
