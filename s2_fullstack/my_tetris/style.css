@@ -1,18 +1,22 @@
 canvas {
   /* border: 2px solid blue; */
   margin-right: 50px;
+  /* border-color: 5px solid blue; */
 }
 #logo {
   width: 200px;
   height: 100px;
 }
 #idcanvas {
-  border: 2px solid black;
+  border: 1px solid black;
+  width: unset;
+  /* height: 500px; */
 }
 
 #blockCanvas {
   display: flex;
   flex-direction: row;
+  /* border-color: 5px solid yellow; */
 }
 .tetris {
   display: flex;

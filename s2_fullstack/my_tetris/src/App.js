@@ -50,6 +50,7 @@ window.onload = function () {
   }
 
   function refreshCanvas() {
+    ``;
     // netoyage canvas 1
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -83,6 +84,7 @@ window.onload = function () {
           gameStartAudio.play();
         });
       } else {
+        delay = 250;
         formY--; // En cas de collision on revient en arrière
         copierFormeDansLaGrille();
         formY = Y_INITIAL; // Une nouvelle forme arrive en haut du canvas
@@ -92,7 +94,7 @@ window.onload = function () {
         numForme = formeSuivante; // Copier la forme suivante
         formeSuivante = nouvelleForme();
         verifierLignes();
-        delay = 250; //reintialisation de la vitesse apres aveoir presse sur la barre d'espace
+        //reintialisation de la vitesse apres aveoir presse sur la barre d'espace
       }
     }
 
@@ -174,6 +176,7 @@ window.onload = function () {
   window.addEventListener(
     "keydown",
     function (event) {
+      event.preventDefault();
       let key = event.key;
       switch (key) {
         case "1":
@@ -229,11 +232,18 @@ window.onload = function () {
           moveRight();
           break;
 
-        case "2":
+        // case "2":
+        //   delay -= 200;
+        //   if (delay < 50) delay = 50; // Limiter la vitesse minimale
+        //   // intervalId = setInterval(refreshCanvas, delay); // Redémarrer l'intervalle avec la nouvelle vitesse
+        //   break;
         case " ":
+        case "2":
+          // Annuler le comportement par défaut
           delay -= 200;
           if (delay < 50) delay = 50; // Limiter la vitesse minimale
-          intervalId = setInterval(refreshCanvas, delay); // Redémarrer l'intervalle avec la nouvelle vitesse
+          // clearInterval(intervalId);
+          // intervalId = setInterval(refreshCanvas, delay); // Redémarrer l'intervalle avec la nouvelle vitesse
           break;
 
         case "8":
@@ -369,7 +379,7 @@ window.onload = function () {
   // Gérer l'événement de la touche "Play" ou "Enter"
   window.addEventListener("keydown", function (event) {
     let key = event.key;
-    if (key === "Enter" || key === " ") {
+    if (key === "Enter") {
       startCountdown();
     }
   });
