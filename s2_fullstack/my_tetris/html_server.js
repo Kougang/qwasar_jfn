@@ -30,9 +30,8 @@ function start_html_server() {
       response.end();
     })
     .listen(port, hostname, () => {
-      console.log(
-        "Server running at http://web-g8edb2a8d-17c7.docode.fi.qwasar.io"
-      );
+      console.log("Server running at 127.0.0.1:8080");
+      console.log("or https://kougang.github.io/tetris-game/ ");
       /* console.log("Replace XXXXXXXXX by your current workspace ID"); */
       /* console.log("(look at the URL of this page and XXXXXXXXX.docode.YYYY.qwasar.io, XXXXXXXXX is your workspace ID and YYYY is your zone)"); */
     });

@@ -1,15 +1,11 @@
-// ici nous creons des tableaux de forme et de couleurs neccessaire
-// Tableau de couleurs des formes
-// Numéro de la forme (du tableau "forme") à afficher
+// !!! variables déclaration  !!!
+const LARGEUR_GRILLE = 14; // number of weidth cases
+const HAUTEUR_GRILLE = 28; // number of height cases
+const CARREAU = 20; // Size in pixels of a grid box
+let canvas; // A canvas is an HTML element in which you can draw shapes
 
-// !!!déclaration des variables !!!
-const LARGEUR_GRILLE = 14; // Nombre de cases en largeur
-const HAUTEUR_GRILLE = 28; // Nombre de cases en hauteur
-const CARREAU = 20; // Taille en pixels d'une case de la grille
-let canvas; // Un canvas est un élément HTML dans lequel on peut dessiner des formes
 let ctx;
 
-// Position de la forme sur la grille
 const X_INITIAL = 5;
 const Y_INITIAL = 0;
 let formX = X_INITIAL;
@@ -17,13 +13,13 @@ let formY = Y_INITIAL;
 
 let numForme = 0;
 let rotation = 0;
-let delay = 250; // Délai initial en millisecondes
-let intervalId; // Identifiant de l'intervalle
+let delay = 250;
+let intervalId;
 
-// Déclaration du tableau grille
+// grille table declaration
 var grille = new Array(LARGEUR_GRILLE);
 
-let formeSuivante;
+let formeSuivante = numForme;
 
 let score = 0;
 let scoreFormY = 0;
@@ -34,7 +30,9 @@ let isPaused = false;
 let isGameOver = false;
 
 let countdown = 3;
-// !!!Tableau de définition des couleurs
+let line = 0;
+let inter = 0;
+// !!!color definition table
 
 let couleursFormes = [
   ["#00FFFF", "#00FF00"], // Couleurs pour la forme 0 (L1-Forme)
@@ -46,9 +44,9 @@ let couleursFormes = [
   ["#FFA500", "#00FF00"],
 ];
 
-// !!!Tableau de définition des formes
+// !!!forme definition table
 
-// Tableau de définition des formes
+// forme definition table
 let forme = new Array();
 let formeAntiHoraire = new Array();
 // L1-Forme
@@ -56,27 +54,27 @@ forme[0] = [
   // L1-Forme
   [
     // rotation 0
-    [0, 0, 0],
-    [1, 0, 0],
+    [-1, -1, -1],
+    [1, -1, -1],
     [1, 1, 1],
   ],
   [
     // rotation 1
-    [0, 1, 1],
-    [0, 1, 0],
-    [0, 1, 0],
+    [-1, 1, 1],
+    [-1, 1, -1],
+    [-1, 1, -1],
   ],
   [
     // rotation 2
-    [0, 0, 0],
+    [-1, -1, -1],
     [1, 1, 1],
-    [0, 0, 1],
+    [-1, -1, 1],
   ],
   [
     // rotation 3
-    [0, 1, 0],
-    [0, 1, 0],
-    [1, 1, 0],
+    [-1, 1, -1],
+    [-1, 1, -1],
+    [1, 1, -1],
   ],
 ];
 // L1-formeAntiHoraire
@@ -342,5 +340,3 @@ formeAntiHoraire[6] = [
     [0, 1, 0],
   ],
 ];
-
-//  { numForme, rotation, couleursFormes, forme };

@@ -1,15 +1,18 @@
-// !!!fonction colision non fonctionnelle!!!
-
 function collision() {
   for (let x = 0; x < forme[numForme][rotation].length; x++) {
-    for (let y = 0; y < forme[numForme][rotation][x].length; y++) {
+    for (let y = 0; y < forme[numForme][rotation].length; y++) {
+      if (forme[numForme][rotation][y][x] == 0) {
+        if (formX + x + 2 < 0) {
+          return true;
+        }
+      }
+
       if (forme[numForme][rotation][y][x] == 1) {
         // Vérification des collisions avec les bords
         if (
           formX + x < 0 ||
           formX + x >= LARGEUR_GRILLE ||
-          formY + y >= HAUTEUR_GRILLE ||
-          formY + y < 0
+          formY + y >= HAUTEUR_GRILLE
         ) {
           return true;
         }
@@ -46,3 +49,19 @@ function copierFormeDansLaGrille() {
   }
   //   console.table(grille);
 }
+
+// forme[0][0][0][y]
+
+// forme = [[[[0, 0, 0],[1, 0, 0],[1, 1, 1],
+//           ],
+//           [[0, 1, 1],[0, 1, 0],[0, 1, 0],],
+//           [[0, 0, 0],[1, 1, 1],[0, 0, 1],],
+//           [[0, 1, 0],[0, 1, 0],[1, 1, 0],],
+//         ],];
+
+//         forme[numforme][rotation][rotation_proprement_dite][y]
+
+//         for (let x = 0; x < forme[numForme][rotation].length; x++) {
+//           for (let y = 0; y < forme[numForme][rotation][x].length; y++) {
+
+//             if (forme[numForme][rotation][y][x] == 1) {
